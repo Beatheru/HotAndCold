@@ -1,5 +1,5 @@
 
-![Alt text](image.png?raw=true "Title")
+![](hot.png?raw=true "Title")
 
 # Hot And Cold
 
