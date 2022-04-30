@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title></title>
+		<style>
+			body
+			{
+				color: white;
+				background-color: #0b0c10;
+			}
+			div.disText
+			{
+				color: white;
+				text-align: center;
+				font-size: 40px;
+				font-family: Impact, Charcoal, sans-serif;
+			}
+			div.instructionsText
+			{
+				color: white;
+				text-align: center;
+				font-family: "Courier New", Courier, monospace;
+				margin-top: 10px;
+			}
+			div.guessText
+			{
+				color: white;
+				font-size: 20px;
+				font-family: Arial, Helvetica, sans-serif;
+				text-align: center;
+			}
+			div.log
+			{
+				font-size: 20px;
+				text-align: center;
+				font-family: "Courier New", Courier, monospace;
+			}
+			div.title
+			{
+				font-size: 40px;
+				text-align: center;
+				font-family: cursive;
+				font-style: italic;
+			}
+			div.message 
+			{
+				text-align: center;
+				font-size: 20px;
+				font-family: "Comic Sans", cursive;
+			}
+			div.instructionsCenter
+			{
+				text-align: center;
+			}
+			div.author
+			{
+				font-size: 20px;
+				margin-bottom: 15px;
+			}
+				
+			span.hot
+			{
+				color: red;
+			}
+			span.cold
+			{
+				color: blue;
+			}
+			div.operations
+			{
+				text-align: center;
+			}
+			div.resetGuessButtons
+			{
+				text-align: center;
+			}
+			button.instructionsButton
+			{
+				background-color: transparent;
+				color: white;
+				border: 1px solid white;
+				padding: 15px 32px;
+				width: 200px;
+				margin: 0 auto;
+				font-family: Impact, Charcoal, sans-serif;
+				transition: transform .2s;
+			}
+			button.operationButtons
+			{
+				background-color: transparent;
+				border: 1px solid #66fcf1;
+				color: white;
+				width: 85px;
+				height: 40px;
+				font-family: Tahoma, Geneva, sans-serif;
+				margin: 2px 0px;
+			}
+			button.resetButton
+			{
+				background-color: red;
+				color: white;
+				border: none;
+				width: 85px;
+				height: 40px;
+				margin-top: -10px;
+				font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+				transition: transform 0.2s;
+			}
+			button.guessButton
+			{
+				background-color: #0086af;
+				color: white;
+				border: none;
+				width: 85px;
+				height: 40px;
+				font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+				margin-top: 5px;
+				margin-right: 50px;
+				transition: transform 0.2s;
+			}
+			button.leftButtons
+			{
+				background-color: #6fa3ed;
+				border: 1px solid black;
+				width: 85px;
+				height: 40px;
+				font-family: "Times New Roman", Times, serif;
+				margin: 2px 0px;
+			}
+			button.instructionsButton:hover
+			{
+				background-color: #514484;
+				transform: scale(1.2);
+			}
+			button.operationButtons:hover
+			{
+				background-color: #20adbc;
+				border: 2px solid white;
+				color: black;
+			}
+			button.guessButton:hover
+			{
+				background-color: #23303a;
+				transform: scale(1.3);
+			}
+			button.resetButton:hover
+			{
+				background-color: #890d28;
+				transform: scale(1.3);
+			}
+			hr
+			{
+				border-color: #66fcf1;
+				margin-left: 300px;
+				margin-right: 300px;
+			}
+		</style>
+		<script>
+			function initialize()
+			{
+				num = Math.random();
+				num *= 100;
+				num = parseInt(num);
+				numDisplay = 50;
+				
+				msgOver = "You can't go above 100!";
+				msgUnder = "You can't go under 0!";
+				msgWin = "You guessed correctly! Congratulations!"
+				msgLose = "You lose! The number was" + " " + num + "! Try again!";
+				
+				guesses = 5;
+				temp = "";
+				logValue = "";
+				infoToggle = false;
+				
+				outputLog = document.getElementById("log");
+				outputLog.innerHTML = "";
+				outputNum = document.getElementById("numDis");
+				outputNum.innerHTML = numDisplay;
+				outputGuess = document.getElementById("guessNum");
+				outputGuess.innerHTML = guesses;
+				freezeScreen = document.getElementById("freeze");
+				freezeScreen.removeAttribute("hidden");
+				outputGuide = document.getElementById("guide");
+				endMsg = document.getElementById("msg")
+				endMsg.innerHTML = "";
+				howToPlay = document.getElementById("help");
+			}
+				
+			function updateGuess(modifier)
+			{
+				guesses += modifier;
+				outputGuess.innerHTML = guesses;
+			}
+			
+			function display(modifier)
+			{
+				if (numDisplay > 100)
+				{
+					numDisplay -= modifier;
+					alert(msgOver);
+				}
+				if (numDisplay < 0)
+				{
+					numDisplay -= modifier;
+					alert(msgUnder);
+				}
+				outputNum.innerHTML = numDisplay;
+			}
+			
+			function Operation(modifier)
+			{
+				numDisplay += modifier;
+				display(modifier);
+			}
+			
+			function Guess()
+			{
+				temperature();
+				if (numDisplay != num)
+				{
+					if (guesses == 1)
+					{
+						updateGuess(-1);
+						freezeScreen.setAttribute("hidden", "hidden");
+						endMsg.innerHTML = msgLose;
+					}
+					else 
+					{
+						updateGuess(-1);
+						display();
+					}
+				}
+				
+				if (numDisplay == num)
+				{
+					display();
+					updateGuess(-1);
+					freezeScreen.setAttribute("hidden", "hidden");
+					endMsg.innerHTML = msgWin;
+				}
+			}
+				
+			function temperature()
+			{
+				temp = num - numDisplay;
+				temp = Math.abs(temp);
+					
+				
+				if (temp > 55)
+				{
+					temp = "Very Cold";
+				}
+				if (temp <= 55 && temp >= 41)
+				{
+					temp = "Cold";
+				}
+				if (temp <= 40 && temp >= 31)
+				{
+					temp = "Very Cool";
+				}
+				if (temp <= 30 && temp >= 21)
+				{
+					temp = "Cool";
+				}
+				if (temp <= 20 && temp >= 16)
+				{
+					temp = "Warm";
+				}
+				if (temp <= 15 && temp >= 9)
+				{
+					temp = "Very Warm";
+				}
+				if (temp <= 8 && temp >= 6)
+				{
+					temp = "Hot";
+				}
+				if (temp <= 5 && temp >= 1)
+				{
+					temp = "Very Hot";
+					guesses += 1;
+				}
+				if (temp == 0)
+				{
+					temp = "Correct";
+				}
+				
+				addLog();
+			}
+			
+			function addLog()
+			{
+				logValue = logValue + " " + numDisplay + "," + " " + temp + "<br />";
+				outputLog.innerHTML = logValue;
+			}
+			
+			function instructions()
+			{
+				if (infoToggle == false)
+				{
+					howToPlay.removeAttribute("hidden");
+					infoToggle = !infoToggle;
+				}
+				else
+				{
+					howToPlay.setAttribute("hidden", "hidden")
+					infoToggle = !infoToggle;
+				}
+			}
+			
+		</script>
+	</head>
+	<body onload = "initialize();">
+		<div class = "title"> <span class = "hot">Hot</span> and <span class = "cold">Cold</span><br /></div>
+		<br />
+		<div class = "instructionsCenter">
+		<button onclick = "instructions();" class = "instructionsButton"><span id = "toggleButton"> Click for instructions on how to play!</span></button>
+		</div>
+		<div id = "help" hidden class = "instructionsText"> There is a number between 1 and 100. Can you guess my number? </br > - You have 5 guesses to guess my number </br > - The log records your previous guesses and how close you were via temperature </br > - If your guess is very hot, you won't be penalized a guess </br> - Click the reset button to restart!</div><br />
+		<div id = "guide"></div>
+		
+		<div id = "numDis" class = "disText"></div>
+		<br />
+		<div id = "testtem"> </div>
+		<div id = "msg" class = "message"></div>
+		<div id = "freeze" class = "operations">
+		<div class = "guessText"> Guesses: <span id = "guessNum"></span></div>
+		<br />
+		<button onclick = "Operation(1);" class = "operationButtons"> Add 1 </button>
+		<button onclick = "Operation(5);" class = "operationButtons"> Add 5 </button>
+		<button onclick = "Operation(10);" class = "operationButtons"> Add 10 </button>
+		<button onclick = "Operation(25);" class = "operationButtons"> Add 25 </button><br />
+		
+		<button onclick = "Operation(-1);" class = "operationButtons"> Subtract 1 </button>
+		<button onclick = "Operation(-5);" class = "operationButtons"> Subtract 5 </button>
+		<button onclick = "Operation(-10);" class = "operationButtons"> Subtract 10 </button>
+		<button onclick = "Operation(-25);" class = "operationButtons"> Subtract 25 </button><br />
+		
+		
+		</div>
+		<br />
+		<div class = "resetGuessButtons">
+		<span><button onclick = "Guess();" class = "guessButton"> Guess </button></span>
+		<button onclick = "initialize();" class = "resetButton"> Reset </button>
+		</div>
+		<hr />
+		<div class = "log"> Log: </div>
+		<div id = "log" class = "log"></div>
+	</body>
+</html>
